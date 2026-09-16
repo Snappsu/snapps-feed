@@ -7,21 +7,48 @@
 	<title></title>
 	<link rel="stylesheet" href="/blog.css">
 	<link rel="stylesheet" href="/style.css">
-
-
+	<script src="/res/scripts/global.js"></script>
 </head>
 
 <body style="background-color:#000;" id="blog">
 	<nav>
 	</nav>
 	<div id="content">
+		<div id="blog-ui">
+			<div id="blog-toc">
+				<span>table of contents</span>
+				<div id="blog-toc-headers">
+					<h1 class="blog-toc-link" onclick="scrollToElement('content')">[ Top ]</h1>
+				</div>
+			</div>
+			<div id="blog-music" class="hide">
+				<span>music player</span>
+				<span id="blog-music-name">song name</span>
+				<span id="blog-music-album">song album</span>
+				<span id="blog-music-bar-loop-count">loops: 0</span>
+				<div id="blog-music-bar-bg">
+					<div id="blog-music-bar-current"></div>
+					<span id="blog-music-bar-time-now"></span>
+					<span id="blog-music-bar-time-end"></span>
+				</div>
+				<div id="blog-music-buttons-cont">
+					<img id="blog-music-playback" src="/res/icons/play.svg" onclick="window.player.togglePlayback()">
+					<div id="blog-music-volume-cont"><input type="range" value="20" min="0" max="100" orient="horizontal" onmouseup="saveVolumeChange()"></div>
+				</div>
+			</div>
+		</div>
 		<div class="blog-nav"></div>
 		<div id="info"></div>
-		<div><article></article></div>
+		<div>
+			<article></article>
+		</div>
 		<div class="blog-nav"></div>
 	</div>
 	<script src="/res/scripts/brstm.js"></script>
 	<script src="/res/scripts/music.js"></script>
+	<script>
+
+	</script>
 </body>
 
 </html>

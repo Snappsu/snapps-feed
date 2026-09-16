@@ -12,6 +12,8 @@
 /* global */
 :root {
     --bg: #1c1e22;
+    --bg2: #101113;
+    --text1: #eee;
     --cyan: #00bcd4;
     --magenta: #ff0080;
     --yellow: #ffd000;
@@ -32,8 +34,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #101113 !important;
-    color: #fff;
+    background-color: var(--bg2) !important;
+    color: var(--text1);
 }
 
 /* navbar */
@@ -66,7 +68,7 @@ nav h1 {
 }
 
 nav h1 a {
-    color: #fff !important;
+    color: var(--text1) !important;
 
     text-decoration: none !important;
 }
@@ -75,17 +77,53 @@ h1 {
     font-family: octosquare;
 }
 
+/* makes sure anchor headers are in view */
+article h1::before,article h2::before,article h3::before {
+    content: '';
+    display: block;
+    visibility: hidden;
+    height: 3em;      /* this is the height of your header */
+    margin-top: -3em; /* this is the height of your header, negated */
+}
+
 /* content area*/
 body#home {
     height: 100vh;
     overflow-y: hidden;
 }
 
-hr {
-    width: 90%;
+#home #intro img{
+    width: 80%;
+    border-radius: 12px;
+    border: solid 1px #000;
+    margin-top: 1em;
+    transition: .1s;
+    user-select: none;
+    background-color: transparent;
+    --color: #fff;
+opacity: 0.8;
+background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(to right, #0006 1px, transparent 1px);
+background-size: 20px 20px, 20px 20px ;
+animation: pfp-bg-scroll 3s linear infinite;
+}
+
+@keyframes pfp-bg-scroll {
+    0%{ background-position:0 0,0 0;}
+    100%{ background-position: 20px 20px,20px 20px;}
+    
 }
 
 
+#home #intro img:hover{
+    scale: 1.05;
+}
+#home #intro img:active{
+    scale: 1.025;
+}
+
+hr {
+    width: 90%;
+}
 
 #content {
     display: flex;
@@ -211,14 +249,14 @@ hr {
     flex-direction: column;
     margin-top: 1em;
     border-radius: 1em;
-    background-color: #101113;
+    background-color: var(--bg2);
     overflow-y: auto;
     flex: 1;
     position: absolute;
     bottom: 1em;
     top: 0em;
     scrollbar-width: thin;
-    scrollbar-color: var(--cyan) #101113;
+    scrollbar-color: var(--cyan) var(--bg2);
 }
 
 
@@ -233,7 +271,7 @@ hr {
 
 /**/
 .blog-entry {
-    color: #fff;
+    color: var(--text1);
     text-decoration: none;
     position: relative;
     padding: .5em 1em;

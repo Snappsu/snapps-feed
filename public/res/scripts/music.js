@@ -8,6 +8,12 @@ var userPrefs = {
     "volume": .2,
 }
 
+const MUSIC_PLAYER_ELEMENT = {
+    root:document.getElementById("blog-music"),
+    name:document.getElementById("blog-music-name"),
+    album:document.getElementById("blog-music-album")
+}
+
 const DEFAULT_SONG = "Hourglass Meadow"
 const RANDOM_SONG_POOL = ["10444", "113524", "30346", "96248", "Hourglass Meadow"]
 const CHILL_SONG_POOL = []
@@ -18,6 +24,7 @@ var nowPlaying = null
 //template: "id":{title:"",game:""},
 
 const musicLibrary = {
+    "96358":{title:"Color Dungeon",game:"LoZ: Link's Awakening (Switch)"},
     "5875":{
         title:"Gateway Galaxy - Medley",
         game:"Super Mario Galaxy"
@@ -62,7 +69,6 @@ const musicLibrary = {
         title: "Catswing",
         game: "Deltarune Chapters 3 + 4",
     },
-
     "86844": {
         title: "Acid Hues [Off the Hook]",
         game: "Splatoon 2",
@@ -71,6 +77,7 @@ const musicLibrary = {
         title: "Temptation Stairway",
         game: "Hourglass Meadow",
     },
+    
 }
 
 function handlePlayback() {
@@ -88,7 +95,7 @@ function handlePlayback() {
 }
 
 function saveVolumeChange() {
-    userPrefs.volume = document.getElementById("music-player-volume-cont").children[0].value / 100
+    userPrefs.volume = document.getElementById("blog-music-volume-cont").children[0].value / 100
     //savePreferences()
 }
 
@@ -131,20 +138,34 @@ function toggleLooping() {
 }
 
 function updateMusicGUI() {
+    // if nothing is playing
+    if (nowPlaying == null){ 
+        //hide
+        MUSIC_PLAYER_ELEMENT.root.classList.add("hide")
+        
+    }
+    else {
+        //show
+        MUSIC_PLAYER_ELEMENT.root.classList.remove("hide")
+
+    }
+
+    MUSIC_PLAYER_ELEMENT.name.innerText = nowPlaying.title
+    MUSIC_PLAYER_ELEMENT.album.innerText = nowPlaying.game
 
     //current pos
     const currentPosition = window.player.progress.currentSample / window.player.progress.totalSamples
-    document.getElementById("music-player-bar-current").style.width = `calc(100% * ${currentPosition})`
+    document.getElementById("blog-music-bar-current").style.width = `calc(100% * ${currentPosition})`
 
     //loop area
     const loopPos = window.player.metadata.loopLocation / window.player.progress.totalSamples * 100;
     if (window.player.looping) {
-        document.getElementById("music-player-bar-bg").style.backgroundImage =
-            `linear-gradient(90deg, rgb(from var(--color-magenta) r g b /.25) calc(${loopPos}%), transparent calc(${loopPos}% + 20px))`
-        document.getElementById("music-player-bar-loop-count").innerText = `loops: ${window.player.loops}`
+        document.getElementById("blog-music-bar-bg").style.backgroundImage =
+            `linear-gradient(90deg, rgb(from var(--magenta) r g b /.25) calc(${loopPos}%), transparent calc(${loopPos}% + 20px))`
+        document.getElementById("blog-music-bar-loop-count").innerText = `loops: ${window.player.loops}`
     } else {
-        document.getElementById("music-player-bar-bg").style.backgroundImage = "unset"
-        document.getElementById("music-player-bar-loop-count").innerText = ``
+        document.getElementById("blog-music-bar-bg").style.backgroundImage = "unset"
+        document.getElementById("blog-music-bar-loop-count").innerText = ``
     }
 
     //current and end time
@@ -152,23 +173,18 @@ function updateMusicGUI() {
         .sampleRate) * 1000).toISOString().substring(14, 19)
     const endTime = new Date(Math.ceil(window.player.progress.totalSamples / window.player.metadata
         .sampleRate) * 1000).toISOString().substring(14, 19)
-    document.getElementById("music-player-bar-time-now").innerText = currentTime
-    document.getElementById("music-player-bar-time-end").innerText = endTime
+    document.getElementById("blog-music-bar-time-now").innerText = currentTime
+    document.getElementById("blog-music-bar-time-end").innerText = endTime
 
     //play pause
     if (window.player.paused) {
-        document.getElementById("music-player-playback").children[0].src = "/res/img/icon/svg/play.svg"
+        document.getElementById("blog-music-playback").src = "/res/icons/play.svg"
     } else {
-        document.getElementById("music-player-playback").children[0].src = "/res/img/icon/svg/pause.svg"
+        document.getElementById("blog-music-playback").src = "/res/icons/pause.svg"
     }
 
     //volume
-    window.player.volume.set(document.getElementById("music-player-volume-cont").children[0].value / 100)
-
-    // music label
-    nowPlaying ? document.getElementById("music-player-label").innerText =
-        `${nowPlaying.game} - ${nowPlaying.title}` : document.getElementById("music-player-label").innerText =
-        ""
+    window.player.volume.set(document.getElementById("blog-music-volume-cont").children[0].value / 100)
 
 }
 
@@ -177,3 +193,6 @@ function stopPlaying() {
     window.player.togglePlayback(true)
     window.player.seek(0)
 }
+
+// set up music stuff
+window.player.setOnUpdate(updateMusicGUI) // music player setup
