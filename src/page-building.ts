@@ -42,6 +42,7 @@ export class Page {
 
 let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INFO.DESCRIPTION,"https://cdn.snapps.dev/images/buttonBIG.gif")
     await head.fetchImage()
+    head.buildDiscordComponents()
 
     // --- build page ---
     let outHTML = new HTMLRewriter()
@@ -62,47 +63,46 @@ let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INF
      * @returns the final page content
      */
     static async blog(page:any, blog_id:string):Promise<Response>{
-        
-    let requestedBlog:any=[]
-    try {
-        
-        requestedBlog = await (await env.BLOG_DB.prepare(`SELECT ROWID,* FROM [entries] where [id]="${blog_id}"`).run()).results
-        // console.log(requestedBlog)
-         if (requestedBlog.length==0){} //return early
+            
+   
+        try {
+                
+            let blog = await Blog.Database.getById(blog_id)
 
-    let blog = new Blog.Entry(requestedBlog[0])
+            if (blog==null) throw new Error ("blog not found!")
 
-    // HACK: retroactively retrieves old content
-    blog.content = blog.content.replaceAll("/res/","https://snapps.dev/res/")
+            // HACK: retroactively retrieves old content
+            blog.content = blog.content.replaceAll("/res/","https://snapps.dev/res/")
 
-    // get needed data
-    let blogNav = new Handlers.BlogNav(blog)
-    await blogNav.init()
-    
-    let head = new Handlers.Head(`${blog.tags.includes('nsfw')?"🔞 - ":""}${blog.title} - snapps' blog`,`https://feed.snapps.dev/blog/${blog.id}`,`${blog.published.toISOString()} - ${blog.summary}`,blog.image,blog.tags.includes('nsfw')?"#ff0080":null)
-    await head.fetchImage()
-    
-    let headers:string[][] = []
-    let headersFound = blog.content.matchAll(/^(#{1,3}) (.+)/gm)
-    for (const match of headersFound) {
-        headers.push([match[2],match[1]])
-    }
+            // get needed data
+            let blogNav = new Handlers.BlogNav(blog)
+            await blogNav.init()
+            
+            let head = new Handlers.Head(`${blog.tags.includes('nsfw')?"🔞 - ":""}${blog.title} - snapps' blog`,`https://feed.snapps.dev/blog/${blog.id}`,`${blog.published.toISOString()} - ${blog.summary}`,blog.image,blog.tags.includes('nsfw')?"#ff0080":null)
+            await head.fetchImage()
+            head.buildDiscordComponents(`blog/${blog_id}`)
+            
+            let headers:string[][] = []
+            let headersFound = blog.content.matchAll(/^(#{1,3}) (.+)/gm)
+            for (const match of headersFound) {
+                headers.push([match[2],match[1]])
+            }
 
-    // --- build page ---
-    let outHTML = new HTMLRewriter()
-        .on("nav", new Handlers.NavBar)
-        .on("article", new Handlers.BlogContent(blog.html()))  
-        .on("#blog-toc-headers", new Handlers.BlogTOC(headers))
-        .on("#info", new Handlers.BlogInfo(blog))
-        .on(".blog-nav", blogNav)
-        .on("*",new Handlers.Comment)
-        .on("head", head)
+            // --- build page ---
+            let outHTML = new HTMLRewriter()
+                .on("nav", new Handlers.NavBar)
+                .on("article", new Handlers.BlogContent(blog.html()))  
+                .on("#blog-toc-headers", new Handlers.BlogTOC(headers))
+                .on("#info", new Handlers.BlogInfo(blog))
+                .on(".blog-nav", blogNav)
+                .on("*",new Handlers.Comment)
+                .on("head", head)
 
-    return outHTML.transform(page)
-    } catch (error) {
-        console.error(error)
-        return await env.ASSETS.fetch(`${env.BLOG_INFO.ROOT}/404.html`)
-    }
+            return outHTML.transform(page)
+        } catch (error) {
+            console.error(error)
+            return await env.ASSETS.fetch(`${env.BLOG_INFO.ROOT}/404.html`)
+        }
    
     }
 
@@ -198,5 +198,90 @@ let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INF
         let response = new Response(channel.json(),{headers:headers})
         return response
     }
+
+    static async discordBlogEmbed(blog_id:string):Promise<Response>{
+        
+        try {
+            // get blog
+            let blog = await Blog.Database.getById(blog_id)
+            if (blog==null) throw new Error ("blog not found!")
+            // make page
+                let headers = new Headers()
+                headers.append("content-type","application/json")
+                let response = new Response(blog.discordEmbed(),{headers:headers})
+                return response
+        } catch (error) {
+            return Page.discordBaseEmbed()
+        }
+    }
+
+    static async discordBaseEmbed(text?:string):Promise<Response>{
+        
+    let embed = {
+        "component": {
+                "type": 17,
+                "spoiler": false,
+                "accent_color": parseInt(`0x${env.BLOG_INFO.COLOR}`, 16),
+                "components": [
+                    {
+                        "type": 9,
+                        "components": [
+                            {
+                            "type": 10,
+                            "content": `# **[${env.BLOG_INFO.TITLE}](${env.BLOG_INFO.ROOT})**\n${env.BLOG_INFO.DESCRIPTION}`
+                            }
+                        ],
+                        "accessory": {
+                            "type": 2,
+                            "style": 5,
+                            "label": "Visit",
+                            "url": env.BLOG_INFO.ROOT
+                        }
+                        },
+                        {
+                        "type": 14,
+                        "divider": true,
+                        "spacing": 1
+                        },
+                        {
+                        "type": 12,
+                        "items": [
+                            {
+                            "media": {
+                                "url": "https://cdn.snapps.dev/images/buttonBIG.gif"
+                            }
+                            }
+                        ]
+                        },
+                        {
+                        "type": 14,
+                        "divider": true
+                        },
+                        {
+                        "type": 9,
+                        "components": [
+                            {
+                            "type": 10,
+                            "content": `## **About the Author**\n${env.BLOG_INFO.AUTHOR.DESC}`
+                            }
+                        ],
+                        "accessory": {
+                            "type": 11,
+                            "media": {
+                            "url":  env.BLOG_INFO.AUTHOR.ICON
+                            }
+                        }
+                    }
+                ]
+            }
+    }
+
+    let headers = new Headers()
+    headers.append("content-type","application/json")
+    let response = new Response(JSON.stringify(embed),{headers:headers})
+    return response
+    }
+
+    
 }
 

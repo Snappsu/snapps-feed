@@ -3,7 +3,6 @@
  */
 
 import { env } from "cloudflare:workers";
-import { match } from "node:assert";
 
 /**
  * the Command Conversion Matrix
@@ -168,8 +167,13 @@ export class Entry {
 		this.published = new Date(parseInt(ENTRYDATA.published))
 		this.image = ENTRYDATA.image
         this.contentVer = ENTRYDATA.content_ver
+        this.content = ENTRYDATA.content
 		if(ENTRYDATA.content) this.content = ENTRYDATA.content
 	}
+
+    link(){
+        return `${env.BLOG_INFO.ROOT}/blog/${this.id}`
+    }
 
     /**
      * builds the html string specifically for the blog reader to use
@@ -261,6 +265,76 @@ export class Entry {
 
 		return out 
 	}
+
+    discordEmbed(){
+        let outline =   {
+            "component": {
+                "type": 17,
+                "spoiler": false,
+                "accent_color": parseInt(`0x${env.BLOG_INFO.COLOR}`, 16),
+                "components": [
+                    {
+                    "type": 10,
+                    "content": `# **[${env.BLOG_INFO.TITLE}](${env.BLOG_INFO.ROOT})**\n${env.BLOG_INFO.DESCRIPTION}`
+                    },
+                    {
+                    "type": 14,
+                    "divider": true,
+                    "spacing": 1
+                    },
+                    {
+                    "type": 9,
+                    "components": [
+                        {
+                        "type": 10,
+                        "content": `## [${this.title}](${this.link()})\n${this.summary}`
+                        }
+                    ],
+                    "accessory": {
+                        "type": 2,
+                        "style": 5,
+                        "label": "Read Now",
+                        "url": this.link()
+                    }
+                    },
+                    {
+                    "type": 12,
+                    "items": [
+                        {
+                        "media": {
+                            "url": this.image
+                        }
+                        }
+                    ]
+                    },
+                    {
+                    "type": 10,
+                    "content": `-# Published: ${this.published}`
+                    },
+                    {
+                    "type": 14,
+                    "divider": true
+                    },
+                    {
+                    "type": 9,
+                    "components": [
+                        {
+                        "type": 10,
+                        "content": `## **About the Author**\n${env.BLOG_INFO.AUTHOR.DESC}`
+                        }
+                    ],
+                    "accessory": {
+                        "type": 11,
+                        "media": {
+                        "url": env.BLOG_INFO.AUTHOR.ICON
+                        }
+                    }
+                    }
+                ]
+            }
+        }
+        return JSON.stringify(outline)
+    }
 }
 
 /**
@@ -275,7 +349,7 @@ export class Database {
      */
     static async getById(id: string): Promise<Entry|null> {
         try {
-            let results = (await env.BLOG_DB.prepare(`SELECT rowid,[id],[title],[summary],[category],[tags],[published],[image] FROM [entries] where id = "${id}" `).run()).results
+            let results = (await env.BLOG_DB.prepare(`SELECT rowid,* FROM [entries] where id = "${id}" `).run()).results
             if (results.length==0) return null
             else return new Entry(results[0])
         } catch (error) {
@@ -291,7 +365,7 @@ export class Database {
      */
     static async getByRow(row: number): Promise<Entry|null> {
         try {
-            let results = (await env.BLOG_DB.prepare(`SELECT rowid,[id],[title],[summary],[category],[tags],[published],[image] FROM [entries] where rowid = ${row} `).run()).results
+            let results = (await env.BLOG_DB.prepare(`SELECT rowid,* FROM [entries] where rowid = ${row} `).run()).results
             if (results.length==0) return null
             else return new Entry(results[0])
         } catch (error) {
@@ -317,4 +391,3 @@ export class Database {
 
 
 }
-

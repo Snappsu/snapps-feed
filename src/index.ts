@@ -20,6 +20,7 @@ export default {
 		console.log(request.headers)
 		let url = new URL(request.url)
 		let path = url.pathname.split("/")
+		console.log(path)
 		
 		let response = null
 		switch (path[1]) {
@@ -45,7 +46,20 @@ export default {
 
 				response = Builder.Page.blog(await env.ASSETS.fetch(`${url.origin}/blog.html`),path[2])
 				break;
-			
+
+			// discord embed stuff
+			case "discord":
+				switch (path[2]) {
+					case "blog":
+						response = Builder.Page.discordBlogEmbed(path[3])
+						break;
+				
+					default:
+						response = Builder.Page.discordBaseEmbed()
+						break;
+				}
+			break;
+
 			// retrofitting old feeds
 			case "rss":
 				response = Builder.Page.rssFeed()

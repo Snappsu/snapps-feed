@@ -8,11 +8,14 @@
 	"vars": {
 		"BLOG_INFO": {
 			"TITLE": "snapps' snexy blog",
-			"DESCRIPTION": "snakes and synths, servers and software, sniddy and snass, we got it all!",
+			"DESCRIPTION": "Snakes and synths, servers and software, sniddy and snass, we got it all!",
 			"ROOT": "http://127.0.0.1:8787",
+			"COLOR": "0FABBA",
 			"AUTHOR": {
 				"NAME": "snapps",
-				"EMAIL": "lead.dumbass@snapps.dev"
+				"EMAIL": "lead.dumbass@snapps.dev",
+				"DESC":"Hello, I'm Snapps! You probably know me as your local sniddy-slingin' synth, but I do so much more under the hood; writing, programming, worldbuilding, gaming, a whole lot of things! If you'd have me, I'd love to yap about it. 💚",
+				"ICON":"https://cdn.snapps.dev/images/me.png"
 			}
 		}
 	},
@@ -42,11 +45,14 @@
 			"vars": {
 				"BLOG_INFO": {
 					"TITLE": "snapps' snexy blog",
-					"DESCRIPTION": "snakes and synths, servers and software, sniddy and snass, we got it all!",
+					"DESCRIPTION": "Snakes and synths, servers and software, sniddy and snass, we got it all!",
 					"ROOT": "https://feed.snapps.dev",
+					"COLOR": "0FABBA",
 					"AUTHOR": {
 						"NAME": "snapps",
-						"EMAIL": "lead.dumbass@snapps.dev"
+						"EMAIL": "lead.dumbass@snapps.dev",
+						"DESC":"Hello, I'm Snapps! You probably know me as your local sniddy-slingin' synth, but I do so much more under the hood; writing, programming, worldbuilding, gaming, a whole lot of things! If you'd have me, I'd love to yap about it. 💚",
+						"ICON":"https://cdn.snapps.dev/images/me.png"
 					}
 				}
 			},
@@ -63,11 +69,14 @@
 			"vars": {
 				"BLOG_INFO": {
 					"TITLE": "snapps' snexy blog",
-					"DESCRIPTION": "snakes and synths, servers and software, sniddy and snass, we got it all!",
+					"DESCRIPTION": "Snakes and synths, servers and software, sniddy and snass, we got it all!",
 					"ROOT": "https://feed-staging.snapples64.workers.dev",
+					"COLOR": "0FABBA",
 					"AUTHOR": {
 						"NAME": "snapps",
-						"EMAIL": "lead.dumbass@snapps.dev"
+						"EMAIL": "lead.dumbass@snapps.dev",
+						"DESC":"Hello, I'm Snapps! You probably know me as your local sniddy-slingin' synth, but I do so much more under the hood; writing, programming, worldbuilding, gaming, a whole lot of things! If you'd have me, I'd love to yap about it. 💚",
+						"ICON":"https://cdn.snapps.dev/images/me.png"
 					}
 				}
 			},

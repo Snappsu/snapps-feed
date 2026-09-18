@@ -9,7 +9,7 @@
  * be the spot, but consider looking into the actual html files.
  */
 
-import { it } from "node:test"
+import { env } from "cloudflare:workers";
 import * as Blog from "./blog"
 
 // general page building
@@ -25,14 +25,16 @@ export class Head{
     image_link:string|null
     image_dim:[number,number] = [0,0]
     color:string|null
+    discordComponent:string|null = null
 
-
-    constructor (title:string,link:string,summary:string,image_link:string|null="https://cdn.snapps.dev/images/button.gif",color:string|null="#00bcd4"){
+    constructor (title:string,link:string,summary:string,image_link?:string|null,color?:string|null){
         this.title = title
         this.link = link
         this.summary = summary
-        this.image_link = image_link==null?"https://cdn.snapps.dev/images/button.gif":image_link
-        this.color=color = color==null?"#00bcd4":color
+        this.image_link = (image_link || image_link===null)?image_link:"https://cdn.snapps.dev/images/button.gif"
+        this.color=color = (color || color===null)?color:`#${env.BLOG_INFO.COLOR}`
+
+
          
     }
 
@@ -50,10 +52,10 @@ export class Head{
 <meta property="twitter:title" content="${this.title}">
 <meta property="twitter:card" content="summary_large_image">
 <title>${this.title}</title>
+${this.discordComponent?this.discordComponent:""}
 `
         element.append(out,{html:true})
     }
-
 
     /**
      * NEEDS TO EXECUTE BEFORE USING HANDLER. fetches the (metadata) of the embed image so that the image is
@@ -73,6 +75,14 @@ export class Head{
         const metadata:any = await image.json();
         this.image_dim = [metadata.width,metadata.height];
         return;
+    }
+
+    buildDiscordComponents(jsonAddress?:string):void{
+        this.discordComponent = `<link
+  rel="discord:component-embed"
+  type="application/json"
+  href="${env.BLOG_INFO.ROOT}/discord/${jsonAddress?jsonAddress:""}"
+>`
     }
 }
 export class NavBar{
