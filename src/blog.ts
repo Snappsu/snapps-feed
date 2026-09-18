@@ -171,6 +171,10 @@ export class Entry {
 		if(ENTRYDATA.content) this.content = ENTRYDATA.content
 	}
 
+    isNSFW(){
+        return this.tags.includes("nsfw")
+    }
+
     link(){
         return `${env.BLOG_INFO.ROOT}/blog/${this.id}`
     }
@@ -271,7 +275,7 @@ export class Entry {
             "component": {
                 "type": 17,
                 "spoiler": false,
-                "accent_color": parseInt(`0x${env.BLOG_INFO.COLOR}`, 16),
+                "accent_color": this.isNSFW()?0xff2f00:parseInt(`0x${env.BLOG_INFO.COLOR}`, 16),
                 "components": [
                     {
                     "type": 10,
@@ -287,7 +291,7 @@ export class Entry {
                     "components": [
                         {
                         "type": 10,
-                        "content": `## [${this.title}](${this.link()})\n${this.summary}`
+                        "content": `## [${this.isNSFW()?`🔞 NSFW - ${this.title}`:this.title}](${this.link()})\n${this.summary}`
                         }
                     ],
                     "accessory": {
