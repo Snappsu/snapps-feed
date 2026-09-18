@@ -210,12 +210,77 @@ let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INF
                 let response = new Response(blog.discordEmbed(),{headers:headers})
                 return response
         } catch (error) {
-            let headers = new Headers()
-                headers.append("content-type","application/json")
-                let response = new Response("{}",{headers:headers})
-                return response
+            return Page.discordBaseEmbed()
         }
-
     }
+
+    static async discordBaseEmbed(text?:string):Promise<Response>{
+        
+    let embed = {
+        "component": {
+                "type": 17,
+                "spoiler": false,
+                "accent_color": 1752220,
+                "components": [
+                    {
+                        "type": 9,
+                        "components": [
+                            {
+                            "type": 10,
+                            "content": `# **[${env.BLOG_INFO.TITLE}](${env.BLOG_INFO.ROOT})**\n${env.BLOG_INFO.DESCRIPTION}`
+                            }
+                        ],
+                        "accessory": {
+                            "type": 2,
+                            "style": 5,
+                            "label": "Visit",
+                            "url": env.BLOG_INFO.ROOT
+                        }
+                        },
+                        {
+                        "type": 14,
+                        "divider": true,
+                        "spacing": 1
+                        },
+                        {
+                        "type": 12,
+                        "items": [
+                            {
+                            "media": {
+                                "url": "https://cdn.snapps.dev/images/buttonBIG.gif"
+                            }
+                            }
+                        ]
+                        },
+                        {
+                        "type": 14,
+                        "divider": true
+                        },
+                        {
+                        "type": 9,
+                        "components": [
+                            {
+                            "type": 10,
+                            "content": "## **About the Author**\nSome about-me stuffs..."
+                            }
+                        ],
+                        "accessory": {
+                            "type": 11,
+                            "media": {
+                            "url": "https://feed-staging.snapples64.workers.dev/res/images/me.png"
+                            }
+                        }
+                    }
+                ]
+            }
+    }
+
+    let headers = new Headers()
+    headers.append("content-type","application/json")
+    let response = new Response(JSON.stringify(embed),{headers:headers})
+    return response
+    }
+
+    
 }
 
