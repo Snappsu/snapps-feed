@@ -39,7 +39,7 @@ export class Head{
     element(element:any = []) {
         let out =  `
 <meta name="keywords" content="${this.summary}">
-<meta property="og:title" content="${this.title} - snapps' blog">
+<meta property="og:title" content="${this.title}">
 <meta property="og:type" content="article">
 <meta property="og:url" content="${this.link}">
 <meta property="og:image" content="${this.image_link}">
@@ -47,8 +47,9 @@ export class Head{
 <meta property="twitter:image:src" content="${this.image_link}">
 <meta property="theme-color" content="${this.color}">
 <meta property="og:description" content="${this.summary}">
-<meta property="twitter:title" content="${this.title} - snapps' blog">
+<meta property="twitter:title" content="${this.title}">
 <meta property="twitter:card" content="summary_large_image">
+<title>${this.title}</title>
 `
         element.append(out,{html:true})
     }

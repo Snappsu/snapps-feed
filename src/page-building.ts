@@ -79,7 +79,7 @@ let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INF
     let blogNav = new Handlers.BlogNav(blog)
     await blogNav.init()
     
-    let head = new Handlers.Head(`${blog.tags.includes('nsfw')?"🔞 - ":""}${blog.title}`,`https://feed.snapps.dev/blog/${blog.id}`,`${blog.published.toISOString()} - ${blog.summary}`,blog.image,blog.tags.includes('nsfw')?"#ff0080":null)
+    let head = new Handlers.Head(`${blog.tags.includes('nsfw')?"🔞 - ":""}${blog.title} - snapps' blog`,`https://feed.snapps.dev/blog/${blog.id}`,`${blog.published.toISOString()} - ${blog.summary}`,blog.image,blog.tags.includes('nsfw')?"#ff0080":null)
     await head.fetchImage()
     
     let headers:string[][] = []
@@ -91,11 +91,8 @@ let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INF
     // --- build page ---
     let outHTML = new HTMLRewriter()
         .on("nav", new Handlers.NavBar)
-        .on("article", new Handlers.BlogContent(blog.html()))
-        .on("title", new Handlers.BlogHeader(blog))
-  
+        .on("article", new Handlers.BlogContent(blog.html()))  
         .on("#blog-toc-headers", new Handlers.BlogTOC(headers))
-
         .on("#info", new Handlers.BlogInfo(blog))
         .on(".blog-nav", blogNav)
         .on("*",new Handlers.Comment)
@@ -140,7 +137,7 @@ let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INF
         return response
     }
 
-        static async atomFeed():Promise<Response>{
+    static async atomFeed():Promise<Response>{
 
         // create channel
         let name = `${env.BLOG_INFO.TITLE} - atom`
