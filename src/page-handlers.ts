@@ -27,12 +27,12 @@ export class Head{
     color:string|null
     discordComponent:string|null = null
 
-    constructor (title:string,link:string,summary:string,image_link:string|null="https://cdn.snapps.dev/images/button.gif",color:string|null="#00bcd4"){
+    constructor (title:string,link:string,summary:string,image_link?:string|null,color?:string|null){
         this.title = title
         this.link = link
         this.summary = summary
-        this.image_link = image_link==null?"https://cdn.snapps.dev/images/button.gif":image_link
-        this.color=color = color==null?"#00bcd4":color
+        this.image_link = (image_link || image_link===null)?image_link:"https://cdn.snapps.dev/images/button.gif"
+        this.color=color = (color || color===null)?color:`#${env.BLOG_INFO.COLOR}`
 
 
          

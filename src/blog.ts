@@ -271,7 +271,7 @@ export class Entry {
             "component": {
                 "type": 17,
                 "spoiler": false,
-                "accent_color": 1752220,
+                "accent_color": parseInt(`0x${env.BLOG_INFO.COLOR}`, 16),
                 "components": [
                     {
                     "type": 10,
@@ -309,7 +309,7 @@ export class Entry {
                     },
                     {
                     "type": 10,
-                    "content": `-# published: ${this.published}`
+                    "content": `-# Published: ${this.published}`
                     },
                     {
                     "type": 14,
@@ -320,13 +320,13 @@ export class Entry {
                     "components": [
                         {
                         "type": 10,
-                        "content": "## **About the Author**\nSome about-me stuffs..."
+                        "content": `## **About the Author**\n${env.BLOG_INFO.AUTHOR.DESC}`
                         }
                     ],
                     "accessory": {
                         "type": 11,
                         "media": {
-                        "url": "https://feed-staging.snapples64.workers.dev/res/images/me.png"
+                        "url": env.BLOG_INFO.AUTHOR.ICON
                         }
                     }
                     }
