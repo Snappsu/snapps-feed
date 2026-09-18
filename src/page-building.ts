@@ -42,6 +42,7 @@ export class Page {
 
 let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INFO.DESCRIPTION,"https://cdn.snapps.dev/images/buttonBIG.gif")
     await head.fetchImage()
+    head.buildDiscordComponents()
 
     // --- build page ---
     let outHTML = new HTMLRewriter()
