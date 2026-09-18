@@ -333,7 +333,7 @@ export class Entry {
                 ]
             }
         }
-        return ""
+        return JSON.stringify(outline)
     }
 }
 

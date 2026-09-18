@@ -77,11 +77,11 @@ ${this.discordComponent?this.discordComponent:""}
         return;
     }
 
-    buildDiscordComponents():void{
+    buildDiscordComponents(jsonAddress?:string):void{
         this.discordComponent = `<link
   rel="discord:component-embed"
   type="application/json"
-  href="${env.BLOG_INFO.ROOT}/res/scripts/embed.json"
+  href="${env.BLOG_INFO.ROOT}/discord/${jsonAddress?jsonAddress:""}"
 >`
     }
 }

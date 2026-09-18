@@ -80,6 +80,7 @@ let head = new Handlers.Head(env.BLOG_INFO.TITLE,env.BLOG_INFO.ROOT,env.BLOG_INF
             
             let head = new Handlers.Head(`${blog.tags.includes('nsfw')?"🔞 - ":""}${blog.title} - snapps' blog`,`https://feed.snapps.dev/blog/${blog.id}`,`${blog.published.toISOString()} - ${blog.summary}`,blog.image,blog.tags.includes('nsfw')?"#ff0080":null)
             await head.fetchImage()
+            head.buildDiscordComponents(`blog/${blog_id}`)
             
             let headers:string[][] = []
             let headersFound = blog.content.matchAll(/^(#{1,3}) (.+)/gm)
