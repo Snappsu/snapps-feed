@@ -24,6 +24,7 @@ var nowPlaying = null
 //template: "id":{title:"",game:""},
 
 const musicLibrary = {
+    "39265":{title:"Route 228 (Nighttime)",game:"Pokémon Diamond & Pearl"},
     "96358":{title:"Color Dungeon",game:"LoZ: Link's Awakening (Switch)"},
     "5875":{
         title:"Gateway Galaxy - Medley",
