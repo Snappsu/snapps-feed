@@ -291,7 +291,7 @@ export class Entry {
                     "components": [
                         {
                         "type": 10,
-                        "content": `## [${this.isNSFW()?`🔞 NSFW - ${this}`:this.title}](${this.link()})\n${this.summary}`
+                        "content": `## [${this.isNSFW()?`🔞 NSFW - ${this.title}`:this.title}](${this.link()})\n${this.summary}`
                         }
                     ],
                     "accessory": {
