@@ -313,26 +313,7 @@ export class Entry {
                     },
                     {
                     "type": 10,
-                    "content": `-# Published: ${this.published}`
-                    },
-                    {
-                    "type": 14,
-                    "divider": true
-                    },
-                    {
-                    "type": 9,
-                    "components": [
-                        {
-                        "type": 10,
-                        "content": `## **About the Author**\n${env.BLOG_INFO.AUTHOR.DESC}`
-                        }
-                    ],
-                    "accessory": {
-                        "type": 11,
-                        "media": {
-                        "url": env.BLOG_INFO.AUTHOR.ICON
-                        }
-                    }
+                    "content": `-# Published: <t:${this.published.valueOf().toString().slice(0, -3)}:f>`
                     }
                 ]
             }
