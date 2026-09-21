@@ -313,7 +313,7 @@ export class Entry {
                     },
                     {
                     "type": 10,
-                    "content": `-# Published: <t:${this.published.valueOf().toString().slice(0, -3)}:R>`
+                    "content": `-# Published: <t:${this.published.valueOf().toString().slice(0, -3)}:f>`
                     }
                 ]
             }
